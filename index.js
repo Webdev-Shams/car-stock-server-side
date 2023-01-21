@@ -17,27 +17,34 @@ async function run(){
     try{
         await client.connect();
         
-        const serviceCollection = client.db('geniusCar').collection('service');
+        const carCollection = client.db('car-inventory').collection('cars');
 
-        app.get('/service', async(req,res) => {
+        app.get('/cars', async(req,res) => {
             const query = {};
-            const cursor = serviceCollection.find(query);
-            const services = await cursor.toArray();
-            res.send(services);
+            const cursor = carCollection.find(query);
+            const cars = await cursor.toArray();
+            res.send(cars);
         
         });
 
-        app.get('/service/:id', async (req, res) => {
+        app.get('/car/:id', async (req, res) => {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
-            const service = await serviceCollection.findOne(query);
-            res.send(service);
+            const car = await carCollection.findOne(query);
+            res.send(car);
         })
 
-        app.post('/service', async (req, res) => {
+        app.post('/car', async (req, res) => {
             const newService = req.body;
-            const result = await serviceCollection.insertOne(newService);
+            const result = await carCollection.insertOne(newService);
             res.send(result);
+        })
+
+        app.delete('/car/:id', async (req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const erase = await carCollection.deleteOne(query);
+            res.send(erase);
         })
         
         
