@@ -46,8 +46,18 @@ async function run(){
             const erase = await carCollection.deleteOne(query);
             res.send(erase);
         })
-        
-        
+
+        app.put('/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateCar = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set : updateCar
+            }
+            const result = await carCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })       
     }
     finally{
 
